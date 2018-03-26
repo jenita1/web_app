@@ -1,0 +1,34 @@
+doctype html
+html
+    head
+        title expressjs
+
+       
+    body
+        span
+
+            h1 Welcome to dashboard
+        p Please register to proceed
+        p=errMsg
+
+        form(action="/",method="post",name="form",id="form")
+            input(type="text",placeholder="Enter your username",name="username")
+            br
+            br
+            input(type="password",placeholder="Enter your password",name="password")
+            br
+            br
+            input(type="name of disease",placeholder="Enter name of ur disease",name="name of disease")
+            br
+            br
+            input(type="address",placeholder="Enter your address",name="address")
+            br
+            br
+            input(type="phonenumber",placeholder="Enter your phonenumber",name="phonenumber")
+            br
+            input(type="submit",value="signup")
+
+
+        p Already register procceed to login
+        p 
+             a(href="/login") login

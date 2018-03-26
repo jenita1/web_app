@@ -1,0 +1,28 @@
+{
+  "name": "web_app",
+  "version": "1.0.0",
+  "description": "testing project",
+  "main": "app1.js",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "express-validator": "^5.0.3",
+    "jsonwebtoken": "^8.2.0",
+    "mongodb": "^3.0.4",
+    "mongoose": "^5.0.11",
+    "morgan": "^1.9.0",
+    "nodemon": "^1.17.1",
+    "password-hash": "^1.2.2",
+    "pug": "^2.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app1.js"
+  },
+  "keywords": [
+    "webapp"
+  ],
+  "author": "",
+  "license": "ISC"
+}
