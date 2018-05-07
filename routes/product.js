@@ -1,12 +1,39 @@
 var express = require('express');
 var router = express.Router();
 var ProductModel = require('./../models/product');
+var multer  = require('multer');
+// var upload = multer({
+//  dest: 'uploads/' })
+var Storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/img')
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now()+ '-' +file.filename)
+  }
+})
+ 
+
+function fileFilterFn(req, file, cb) {
+
+    if (file.mimetype == "image/jpeg" || file.mimetype == "image/png" || file.mimetype == "image/gif" || file.mimetype == "image/jpg") {
+        cb(null, true);
+    } else {
+        req.fileValidationErr = 'hello';
+        cb(null, false);
+    }
+};
+
+var upload = multer({
+    storage: Storage,
+    fileFilter: fileFilterFn
+});
 
 
 
 //get all products
 
-router.get('/', function(req, res, next) {
+router.get('/',function(req, res, next) {
     var condition = {};
     condition.user = req.user._id;
 
@@ -34,7 +61,7 @@ router.get('/', function(req, res, next) {
 
 	//getting single product form id
 
-router.get('/:id', function(req, res, next) {
+router.get('/:id',function(req, res, next) {
     console.log('user in req', req.user);
 
     ProductModel.findById(req.params.id, function(err, product) {
@@ -48,7 +75,13 @@ router.get('/:id', function(req, res, next) {
 
 //insert product
 
-router.post('/', function(req, res, next) {
+router.post('/',upload.single('file'),function (req, res, next)
+ {
+    if (req.fileValidationErr){
+        return next({
+            message:'Not valid file format'
+        });
+    }
     console.log('user in req', req.user);
     var newProduct = new ProductModel();
     newProduct.name = req.body.name;
@@ -58,8 +91,8 @@ router.post('/', function(req, res, next) {
     newProduct.quantity = req.body.quantity;
     newProduct.description = req.body.description;
     newProduct.color = req.body.color;
-    newProduct.imageName = req.body.imageName;
-    newProduct.tags = req.body.tags.split(',');
+    newProduct.imageName = req.body.filename;
+    
     newProduct.user = req.user._id
 
     newProduct.save(function(err, saved) {
@@ -74,7 +107,7 @@ router.post('/', function(req, res, next) {
 
 	//update product from id
 
-router.put('/:id', function(req, res, next) {
+router.put('/:id',function(req, res, next) {
   var id =req.params.id
    
     ProductModel.findOne({
@@ -110,16 +143,24 @@ router.put('/:id', function(req, res, next) {
 
 //delete product from id
 
-router.delete('/:id', function(req, res, next) {
-    console.log('user in req', req.user);
+router.delete('/:id',function(req, res, next) {
 
-    ProductModel.findByIdAndRemove(req.params.id, function(err, product) {
+   
+      var productId= req.params.id;
+        var err = validate(req);
+        console.log('here', err);
+
+
         if (err) {
             return next(err);
-        } else {
-            res.status(200).json(product);
         }
-    })
+        ProductModel.findByIdAndRemove(req.params.id,function(err, done) {
+            if (err) {
+                return next(err);
+            } else {
+                res.status(200).json(done);
+            }
+        });
 });
 
 

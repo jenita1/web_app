@@ -5,6 +5,8 @@ var config = require('./config');
 var db = require('./db')(config);
 var morgan = require('morgan');
 var expressValidators = require('express-validator');
+var cors=require('cors');
+
 var path = require('path');
 var authRoute = require('./routes/auth')(express, config);
 var userRoute = require('./routes/users');
@@ -24,6 +26,11 @@ app.use(bodyParser.json());
 // setting templating engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+
+
+app.use(cors());
+app.use('/images', express.static(path.join(__dirname, 'uploads')));
+
 app.use(expressValidators());
 app.use('/',authRoute);
 app.use('/user',authentication, userRoute);
@@ -45,7 +52,7 @@ app.use('/product',authentication,productRoute);
 //error handling middleware
 app.use(function(err, req, res, next) {
     console.log('this is error handling middleware');
-    res.status(err.status || 500).json({
+    res.status(400).json({
         status: err.status || 500,
         message: err.message || err
     });

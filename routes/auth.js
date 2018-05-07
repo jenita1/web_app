@@ -11,7 +11,7 @@ function createToken(data, config) {
         user: data._id
     }, config.app.jwtSecret,
     
-    );
+);
     return token;
 }
 
@@ -130,7 +130,7 @@ module.exports = function(express, config) {
                         });
                     }
                 } else {
-                    res.json({
+                    res.status(400).json({
                         status: 204,
                         message: 'User not found'
                     });

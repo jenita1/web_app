@@ -98,6 +98,17 @@ module.exports = function() {
      */
     router.delete('/:id', function(req, res, next) {
         var userId = req.params.id;
+        console.log('user in req', req.user);
+
+    ProductModel.findByIdAndRemove(req.params.id, function(err, user) {
+        if (err) {
+            return next(err);
+        } else {
+            res.status(200).json(user);
+
+
+        }
+    })
 
     });
 
